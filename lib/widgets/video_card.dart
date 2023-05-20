@@ -21,7 +21,7 @@ var arg=Provider.of<VideoProvider>(context);
         // context.read(selectedVideoProvider).state=video;
         arg.changeSelect(index);
         print(video.title);
-        print(videos[VideoProvider.selectVideo].id);
+
         print(index);
         Navigator.pushNamed(context, VideoScreen.routeName);
       },

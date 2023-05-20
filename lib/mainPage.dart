@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 // import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:youtube/data.dart';
+import 'package:youtube/download_secreen.dart';
 import 'package:youtube/home_page.dart';
 
 
@@ -19,9 +20,7 @@ final screens = [
   const Scaffold(
     body: Center(child: Text('Explore Screen')),
   ),
-  const Scaffold(
-    body: Center(child: Text('add Screen')),
-  ),
+  const DownloadScreen(),
   const Scaffold(
     body: Center(child: Text('Subscriptions Screen')),
   ),
@@ -55,9 +54,9 @@ class _MainPageState extends State<MainPage> {
                   label: 'Explore',
                   activeIcon: Icon(Icons.explore)),
               BottomNavigationBarItem(
-                  icon: Icon(Icons.add),
-                  label: 'Add',
-                  activeIcon: Icon(Icons.add_circle)),
+                  icon: Icon(Icons.download_for_offline_outlined),
+                  label: 'download',
+                  activeIcon: Icon(Icons.download_for_offline_rounded)),
               BottomNavigationBarItem(
                   icon: Icon(Icons.subscriptions_outlined),
                   label: 'subscriptions',
