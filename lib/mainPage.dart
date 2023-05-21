@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 // import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:youtube/data.dart';
+import 'package:youtube/models/data.dart';
 import 'package:youtube/download_secreen.dart';
 import 'package:youtube/home_page.dart';
 

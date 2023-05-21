@@ -1,14 +1,15 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:youtube/data.dart';
+import 'package:youtube/models/data.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:youtube/mainPage.dart';
 // import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:youtube/provider.dart';
+import 'package:youtube/provider/providerDatabase.dart';
 import 'package:youtube/videoScreen.dart';
 class VideoCard extends StatelessWidget {
-  final Video video;
+  final MyVideo video;
   final int index;
 
   const VideoCard({Key? key, required this.video,required this.index}) : super(key: key);
@@ -30,7 +31,7 @@ var arg=Provider.of<VideoProvider>(context);
           Stack(
             children: [
               Image.network(
-                video.thumbnailUrl,
+                video.image,
                 height: 220,
                 width: double.infinity,
                 fit: BoxFit.cover,
@@ -52,7 +53,7 @@ var arg=Provider.of<VideoProvider>(context);
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CircleAvatar(
-                foregroundImage: NetworkImage(video.channel.channelImageUrl),
+                foregroundImage: NetworkImage('https://www.simplilearn.com/ice9/free_resources_article_thumb/what_is_image_Processing.jpg'),
               ),
               const SizedBox(
                 width: 30,
@@ -72,7 +73,7 @@ var arg=Provider.of<VideoProvider>(context);
                         child: Text(
                           maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      '${video.channel.channelName}  |  ${video.viewCount}  |  ${timeago.format(video.timestamp)}',
+                      ' |  ${video.title}  |  ${video.duration}',
                       style: const TextStyle(fontSize: 15),
                     )),
 

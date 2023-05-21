@@ -1,21 +1,11 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
 class ProviderData extends ChangeNotifier {
-  List<Map> allVideos = [];
-
-  ///videoDownload.id;
-//           videoDownload.url;
-//           videoDownload.title;
-//           videoDownload.publishDate;
-//           videoDownload.author;
-//           videoDownload.description;
-//           videoDownload.duration;
-
+  static List<Map<String, dynamic>> allVideos = [];
+  static List<MyVideo> videos = [];
   Database? database;
-  static const String tableName = 'myVideo';
+  static const String tableName = 'youtubeVideo';
 
   createDatabase() {
     openDatabase(
@@ -24,53 +14,69 @@ class ProviderData extends ChangeNotifier {
       onCreate: (db, version) async {
         await db.execute('''CREATE TABLE $tableName (
         id INTEGER PRIMARY KEY,
-         videoDownloadTitle TEXT,
-         videoDownloadId TEXT,
-        videoDownloadUrl TEXT,
-        videoDownloadPublishDate TEXT,
-        videoDownloadDescription TEXT,
-        videoDownloadDuration TEXT,
-        )''');
-
-
-
-      ///  videoDownloadTitle,videoDownloadId,videoDownloadUrl,videoDownloadPublishDate,videoDownloadDescription,videoDownloadDuration
-
-        print("table created ");
+        videoTitle TEXT,
+        videoUrl TEXT,
+        videoId TEXT,
+        videoPublishDate TEXT,
+        videoDuration TEXT,
+        videoImage TEXT
+      )''');
+        print("Table created");
       },
-      onOpen: (database) async {
+      onOpen: (db) async {
+        database = db;
         readDatabase(database);
         print(allVideos);
       },
     ).then((value) {
       database = value;
+      notifyListeners();
     });
-    notifyListeners();
   }
 
-  insertDatabase({required String title, required String massage}) async {
+  insertDatabase({required MyVideo myVideo}) async {
     await database?.transaction((txn) {
       return txn
           .rawInsert(
-              'INSERT INTO $tableName(title, text) VALUES("$title","$massage")')
+        '''INSERT INTO $tableName(
+           videoTitle,
+           videoUrl,
+           videoId,
+           videoPublishDate,
+           videoDuration,
+           videoImage
+           ) VALUES(
+           "${myVideo.title}",
+           "${myVideo.thumbnailUrl}",
+           "${myVideo.videoId}",
+           "${myVideo.publishDate}",
+           "${myVideo.duration}",
+           "${myVideo.image}"
+           )''',
+      )
           .then((value) {
         print("$value inserted successfully");
         readDatabase(database);
-      }).catchError((onError) {
+      })
+          .catchError((onError) {
         print('error insert =====');
       });
     });
   }
 
-  updateDatabase(
-      {required String title, required String massage, required int id}) async {
-    await database?.rawUpdate(
-        'UPDATE $tableName SET title = ?, text = ? WHERE id = ?',
-        [title, massage, '$id']).then((value) {
-      print("$value update successfully");
-      readDatabase(database);
-    }).catchError((onError) {
-      print('error update ===== $onError');
+  readDatabase(database) {
+    database?.rawQuery('SELECT * FROM $tableName').then((value) {
+      allVideos = value;
+      videos = allVideos.map((videoMap) => MyVideo(
+        videoId: videoMap['id'].toString(),
+        title: videoMap['videoTitle'],
+        thumbnailUrl: videoMap['videoUrl'],
+        duration: videoMap['videoDuration'],
+        publishDate: videoMap['videoPublishDate'],
+        image: videoMap['videoImage'],
+      )).toList();
+      print(allVideos);
+      notifyListeners();
     });
   }
 
@@ -84,12 +90,44 @@ class ProviderData extends ChangeNotifier {
       print('error delete ===== $onError');
     });
   }
+}
 
-  readDatabase(database) {
-    database?.rawQuery('SELECT * FROM $tableName').then((value) {
-      allVideos = value;
-      print(allVideos);
-      notifyListeners();
-    });
+class MyVideo {
+  final String videoId;
+  final String title;
+  final String thumbnailUrl;
+  final String duration;
+  final String publishDate;
+  final String image;
+
+  MyVideo({
+    required this.videoId,
+    required this.title,
+    required this.thumbnailUrl,
+    required this.duration,
+    required this.publishDate,
+    required this.image,
+  });
+
+  factory MyVideo.fromJson(Map<String, dynamic> json) {
+    return MyVideo(
+      videoId: json['videoId'],
+      title: json['title'],
+      thumbnailUrl: json['thumbnailUrl'],
+      duration: json['duration'],
+      publishDate: json['publishDate'],
+      image: json['image'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'videoId': videoId,
+      'title': title,
+      'thumbnailUrl': thumbnailUrl,
+      'duration': duration,
+      'publishDate': publishDate,
+      'image': image,
+    };
   }
 }

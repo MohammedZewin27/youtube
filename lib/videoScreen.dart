@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:youtube/data.dart';
+import 'package:youtube/models/data.dart';
 import 'package:youtube/provider.dart';
+import 'package:youtube/provider/providerDatabase.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class VideoScreen extends StatefulWidget {
@@ -28,11 +29,12 @@ class _VideoScreenState extends State<VideoScreen> {
     // TODO: implement initState
     super.initState();
     controller = YoutubePlayerController(
-      initialVideoId: videos[VideoProvider.selectVideo].id,
+      initialVideoId: ProviderData.allVideos[VideoProvider.selectVideo]['videoId'],
       flags: const YoutubePlayerFlags(
         mute: false,
         autoPlay: true,
         disableDragSeek: false,
+
         loop: false,
         isLive: false,
         forceHD: false,
