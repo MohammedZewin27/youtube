@@ -104,7 +104,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
     }
   }
 
-  Future<void> downloadVideo(id) async {
+  Future<void> downloadVideo(url) async {
     var permisson = await Permission.storage.request();
     if (permisson.isGranted) {
       //download video
@@ -114,9 +114,9 @@ class _DownloadScreenState extends State<DownloadScreen> {
         setState(() => progress = 0);
         var youtubeExplode = YoutubeExplode();
         //get video metadata
-        var videoDownload = await youtubeExplode.videos.get(id);
+        var videoDownload = await youtubeExplode.videos.get(url);
         var manifest =
-        await youtubeExplode.videos.streamsClient.getManifest(id);
+        await youtubeExplode.videos.streamsClient.getManifest(url);
         var streams = manifest.muxed.withHighestBitrate();
         var audio = streams;
         var audioStream = youtubeExplode.videos.streamsClient.get(audio);
@@ -150,18 +150,6 @@ class _DownloadScreenState extends State<DownloadScreen> {
           }
           setState(() => progress = val);
 
-          /// ADD TO DATABASE
-          // var video = Provider.of<ProviderData>(context, listen: false);
-          // var myVideo = MyVideo(
-          //     id: id,
-          //     title: videoDownload.title,
-          //     thumbnailUrl: videoDownload.url,
-          //     duration: videoDownload.duration.toString(),
-          //     description: videoDownload.description,
-          //     publishDate: videoDownload.publishDate.toString());
-          // video.insertDatabase(myVideo: myVideo);
-
-          // Write to file.
           output.add(data);
         }
       } else {
@@ -174,10 +162,10 @@ class _DownloadScreenState extends State<DownloadScreen> {
     }
   }
 
-  Future<void> insertVideoInDatabase(String id) async {
+  Future<void> insertVideoInDatabase(String url) async {
     var video = Provider.of<ProviderData>(context, listen: false);
     var youtubeExplode = YoutubeExplode();
-    var videoInfo = await youtubeExplode.videos.get(id);
+    var videoInfo = await youtubeExplode.videos.get(url);
     var videodd = await videoInfo.id;
     var myVideo = MyVideo(
       videoId: videodd.value.toString(),

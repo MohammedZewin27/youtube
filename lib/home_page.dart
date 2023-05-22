@@ -4,7 +4,6 @@ import 'package:youtube/provider/providerDatabase.dart';
 import 'package:youtube/widgets/custom_sliverAppBar.dart';
 import 'package:youtube/widgets/video_card.dart';
 
-import 'models/data.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);

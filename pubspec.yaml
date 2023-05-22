@@ -48,6 +48,7 @@ dependencies:
   js: ^0.6.7
   flutter_svg: ^2.0.6
   sqflite: ^2.2.8+4
+  flutter_slidable: ^3.0.0
 
 dev_dependencies:
   flutter_test:

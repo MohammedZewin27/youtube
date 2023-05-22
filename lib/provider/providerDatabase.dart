@@ -80,7 +80,7 @@ class ProviderData extends ChangeNotifier {
     });
   }
 
-  deleteRowInDatabase({required int id}) async {
+   deleteRowInDatabase({required int id}) async {
     await database
         ?.rawDelete('DELETE FROM $tableName WHERE id = $id')
         .then((value) {
