@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -17,13 +16,14 @@ class DownloadScreen extends StatefulWidget {
 
 class _DownloadScreenState extends State<DownloadScreen> {
   final TextEditingController urlTextEditingController =
-  TextEditingController();
+      TextEditingController();
   String videoTitle = '';
   String videoPublishDate = '';
   String videoId = '';
   bool downloading = false;
+  bool insert = false;
   double progress = 0.0;
-
+  var pathFileInMyPhone;
 
   @override
   Widget build(BuildContext context) {
@@ -46,15 +46,22 @@ class _DownloadScreenState extends State<DownloadScreen> {
             ),
             videoId != '' && videoId.length > 10
                 ? Image.network(
-              'https://img.youtube.com/vi/$videoId/0.jpg',
-              height: 250,
-            )
+                    'https://img.youtube.com/vi/$videoId/0.jpg',
+                    height: 250,
+                  )
                 : Container(),
             Text(videoTitle),
             Text(videoPublishDate),
             TextButton.icon(
               onPressed: () async {
-                await downloadVideo(urlTextEditingController.text);
+                await downloadVideo(urlTextEditingController.text)
+                    .then((value) {
+                  setState(() {
+                    insert
+                        ? ''
+                        : insertVideoInDatabase(urlTextEditingController.text);
+                  });
+                });
               },
               label: videoId != '' && videoId.length > 10
                   ? const Text('download')
@@ -76,14 +83,14 @@ class _DownloadScreenState extends State<DownloadScreen> {
             ),
             downloading
                 ? Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: LinearProgressIndicator(
-                value: progress,
-                backgroundColor: Colors.blueAccent,
-                valueColor: const AlwaysStoppedAnimation<Color>(
-                    Colors.greenAccent),
-              ),
-            )
+                    padding: const EdgeInsets.all(8.0),
+                    child: LinearProgressIndicator(
+                      value: progress,
+                      backgroundColor: Colors.blueAccent,
+                      valueColor: const AlwaysStoppedAnimation<Color>(
+                          Colors.greenAccent),
+                    ),
+                  )
                 : Container(),
           ],
         ),
@@ -117,19 +124,23 @@ class _DownloadScreenState extends State<DownloadScreen> {
         //get video metadata
         var videoDownload = await youtubeExplode.videos.get(url);
         var manifest =
-        await youtubeExplode.videos.streamsClient.getManifest(url);
+            await youtubeExplode.videos.streamsClient.getManifest(url);
         var streams = manifest.muxed.withHighestBitrate();
         var audio = streams;
         var audioStream = youtubeExplode.videos.streamsClient.get(audio);
         //create a directory
         Directory appDocDir = await getApplicationDocumentsDirectory();
         String appDocPath = appDocDir.path;
+
         var filePath = File('$appDocPath/${videoDownload.id}');
         //delete filePath if exists
         if (filePath.existsSync()) {
           ScaffoldMessenger.of(context)
-              .showSnackBar(const SnackBar(content: Text('  video exist!')));
-          setState(() => downloading = false);
+              .showSnackBar(const SnackBar(content: Text('  video exist!',style: TextStyle(color: Colors.red),)));
+          setState(() {
+            downloading = false;
+            insert = true;
+          });
           return;
           // filePath.deleteSync();
         }
@@ -143,11 +154,11 @@ class _DownloadScreenState extends State<DownloadScreen> {
           // Calculate the current progress.
           double val = ((count / size));
           var msg =
-              '${videoDownload.title} Downloaded to $appDocPath/${videoDownload
-              .id}';
+              '${videoDownload.title} Downloaded to $appDocPath/${videoDownload.id}';
+
           for (val; val == 1.0; val++) {
             ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text(msg)));
+                .showSnackBar(SnackBar(content: Text(msg,style: const TextStyle(color: Colors.green))));
           }
           setState(() => progress = val);
 
@@ -155,12 +166,11 @@ class _DownloadScreenState extends State<DownloadScreen> {
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('add youtube video url first!')));
+            const SnackBar(content: Text('add youtube video url first!',style: TextStyle(color: Colors.red))));
         setState(() => downloading = false);
       }
     } else {
       await Permission.storage.request();
-
     }
   }
 
@@ -168,18 +178,18 @@ class _DownloadScreenState extends State<DownloadScreen> {
     var video = Provider.of<ProviderData>(context, listen: false);
     var youtubeExplode = YoutubeExplode();
     var videoInfo = await youtubeExplode.videos.get(url);
-    var videodd = await videoInfo.id;
+    var videoId = await videoInfo.id;
+    Directory appDocDir = await getApplicationDocumentsDirectory();
+    String appDocPath = appDocDir.path;
     var myVideo = MyVideo(
-      videoId: videodd.value.toString(),
-      image: 'https://img.youtube.com/vi/$videoId/0.jpg',
-      title: videoInfo.title,
-      thumbnailUrl: videoInfo.url,
-      duration: videoInfo.duration.toString().substring(2, 7),
-      publishDate: videoInfo.publishDate.toString().substring(0, 11),
-
-    );
+        videoId: videoId.value.toString(),
+        image: 'https://img.youtube.com/vi/$videoId/0.jpg',
+        title: videoInfo.title,
+        thumbnailUrl: videoInfo.url,
+        duration: videoInfo.duration.toString().substring(2, 7),
+        publishDate: videoInfo.publishDate.toString().substring(0, 11),
+        filePath: '$appDocPath/${videoInfo.id}');
 
     video.insertDatabase(myVideo: myVideo);
   }
-
 }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:pip_view/pip_view.dart';
@@ -31,6 +33,7 @@ class VideoCard extends StatelessWidget {
                 onPressed: (context) {
                   data.deleteRowInDatabase(
                       id: ProviderData.allVideos[index]['id']);
+                  deleteFile(ProviderData.allVideos[index]['filePath']);
                 },
                 backgroundColor: Color(0xFFFE4A49),
                 foregroundColor: Colors.white,
@@ -107,4 +110,19 @@ class VideoCard extends StatelessWidget {
           ),
         ));
   }
+
+  Future<void> deleteFile(String filePath) async {
+    try {
+      final file = File(filePath);
+      if (await file.exists()) {
+        await file.delete();
+        print('تم حذف الملف بنجاح');
+      } else {
+        print('الملف غير موجود');
+      }
+    } catch (e) {
+      print('حدث خطأ أثناء حذف الملف: $e');
+    }
+  }
+
 }

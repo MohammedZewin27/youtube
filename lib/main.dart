@@ -49,6 +49,12 @@ class MyApp extends StatelessWidget {
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
           selectedItemColor: Colors.white,
         ),
+        appBarTheme: const AppBarTheme(
+            systemOverlayStyle:  SystemUiOverlayStyle(
+              // systemNavigationBarColor: Colors.black,
+              statusBarColor: Colors.black,
+            ),
+            ),
       ),
        )
     );

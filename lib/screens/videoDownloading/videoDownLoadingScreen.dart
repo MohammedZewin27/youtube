@@ -1,7 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
+import 'package:youtube/provider/providerDatabase.dart';
+import 'package:youtube/widgets/veiwVideo.dart';
+
+import '../../res.dart';
+import '../../widgets/custom_sliverAppBar.dart';
 
 class VideoDownLoadingScreen extends StatefulWidget {
   const VideoDownLoadingScreen({Key? key}) : super(key: key);
@@ -11,19 +17,41 @@ class VideoDownLoadingScreen extends StatefulWidget {
 }
 
 class _VideoDownLoadingScreenState extends State<VideoDownLoadingScreen> {
-  late VideoPlayerController controller;
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    // controller=VideoPlayerController.file(Fil)..initialize().then((value) {
-    //   setState(() {
-    //
-    //   });
-    // });
-  }
+
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    var videos = ProviderData.videos;
+    var provider = Provider.of<ProviderData>(context);
+    return Scaffold(
+      body: CustomScrollView(
+        slivers: [
+           SliverAppBar(
+          floating: true,
+          leadingWidth: 80,
+            leading: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Image.asset(Res.logo),
+            ),
+          actions: [
+
+          ],
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.only(bottom: 8),
+            sliver: SliverList(
+              delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                  var video = videos[index];
+                  var pathVideo=ProviderData.allVideos[index]['filePath'];
+                  print(pathVideo);
+                  return ViewVideo(video: video, index: index, pathVideo: pathVideo,);
+                },
+                childCount: videos.length,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
