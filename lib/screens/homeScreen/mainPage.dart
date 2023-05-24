@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-
-import 'package:youtube/download_secreen.dart';
-import 'package:youtube/home_page.dart';
+import 'package:youtube/screens/homeScreen/home_page.dart';
+import 'package:youtube/screens/videoDownloading/download_secreen.dart';
 
 
 

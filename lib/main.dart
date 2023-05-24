@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:provider/provider.dart';
-import 'package:youtube/provider.dart';
+import 'package:youtube/provider/provider.dart';
 import 'package:youtube/provider/providerDatabase.dart';
+import 'package:youtube/screens/homeScreen/mainPage.dart';
 
-import 'package:youtube/videoScreen.dart';
 
-import 'mainPage.dart';
+import 'package:youtube/screens/videoView/videoScreen.dart';
+
+
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,7 +31,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Provider.of<ProviderData>(context);
-    return MaterialApp(
+    return Shortcuts(
+        shortcuts: <LogicalKeySet, Intent>{
+        LogicalKeySet(LogicalKeyboardKey.select): const ActivateIntent(),
+        },
+
+       child:  MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'YouTube',
       initialRoute: MainPage.routeName,
@@ -42,6 +50,7 @@ class MyApp extends StatelessWidget {
           selectedItemColor: Colors.white,
         ),
       ),
+       )
     );
   }
 }

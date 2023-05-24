@@ -1,6 +1,6 @@
-import 'dart:convert';
+
 import 'dart:io';
-import 'package:flutter_svg/flutter_svg.dart';
+
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -23,6 +23,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
   String videoId = '';
   bool downloading = false;
   double progress = 0.0;
+
 
   @override
   Widget build(BuildContext context) {
@@ -123,16 +124,16 @@ class _DownloadScreenState extends State<DownloadScreen> {
         //create a directory
         Directory appDocDir = await getApplicationDocumentsDirectory();
         String appDocPath = appDocDir.path;
-        var file = File('$appDocPath/${videoDownload.id}');
-        //delete file if exists
-        if (file.existsSync()) {
+        var filePath = File('$appDocPath/${videoDownload.id}');
+        //delete filePath if exists
+        if (filePath.existsSync()) {
           ScaffoldMessenger.of(context)
               .showSnackBar(const SnackBar(content: Text('  video exist!')));
           setState(() => downloading = false);
           return;
-          // file.deleteSync();
+          // filePath.deleteSync();
         }
-        var output = file.openWrite(mode: FileMode.writeOnlyAppend);
+        var output = filePath.openWrite(mode: FileMode.writeOnlyAppend);
         var size = audio.size.totalBytes;
         var count = 0;
 
@@ -159,6 +160,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
       }
     } else {
       await Permission.storage.request();
+
     }
   }
 
@@ -174,6 +176,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
       thumbnailUrl: videoInfo.url,
       duration: videoInfo.duration.toString().substring(2, 7),
       publishDate: videoInfo.publishDate.toString().substring(0, 11),
+
     );
 
     video.insertDatabase(myVideo: myVideo);

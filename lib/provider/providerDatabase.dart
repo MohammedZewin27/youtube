@@ -5,7 +5,7 @@ class ProviderData extends ChangeNotifier {
   static List<Map<String, dynamic>> allVideos = [];
   static List<MyVideo> videos = [];
   Database? database;
-  static const String tableName = 'youtubeVideo';
+  static const String tableName = 'youtubeVideoNew';
 
   createDatabase() {
     openDatabase(
@@ -19,7 +19,8 @@ class ProviderData extends ChangeNotifier {
         videoId TEXT,
         videoPublishDate TEXT,
         videoDuration TEXT,
-        videoImage TEXT
+        videoImage TEXT,
+        filePath TEXT
       )''');
         print("Table created");
       },
@@ -44,14 +45,16 @@ class ProviderData extends ChangeNotifier {
            videoId,
            videoPublishDate,
            videoDuration,
-           videoImage
+           videoImage,
+           filePath
            ) VALUES(
            "${myVideo.title}",
            "${myVideo.thumbnailUrl}",
            "${myVideo.videoId}",
            "${myVideo.publishDate}",
            "${myVideo.duration}",
-           "${myVideo.image}"
+           "${myVideo.image}",
+           "${myVideo.filePath}"
            )''',
       )
           .then((value) {
@@ -74,6 +77,8 @@ class ProviderData extends ChangeNotifier {
         duration: videoMap['videoDuration'],
         publishDate: videoMap['videoPublishDate'],
         image: videoMap['videoImage'],
+        filePath: videoMap['filePath'],
+
       )).toList();
       print(allVideos);
       notifyListeners();
@@ -99,6 +104,7 @@ class MyVideo {
   final String duration;
   final String publishDate;
   final String image;
+  final String filePath;
 
   MyVideo({
     required this.videoId,
@@ -107,27 +113,8 @@ class MyVideo {
     required this.duration,
     required this.publishDate,
     required this.image,
+     this.filePath='',
   });
 
-  factory MyVideo.fromJson(Map<String, dynamic> json) {
-    return MyVideo(
-      videoId: json['videoId'],
-      title: json['title'],
-      thumbnailUrl: json['thumbnailUrl'],
-      duration: json['duration'],
-      publishDate: json['publishDate'],
-      image: json['image'],
-    );
-  }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'videoId': videoId,
-      'title': title,
-      'thumbnailUrl': thumbnailUrl,
-      'duration': duration,
-      'publishDate': publishDate,
-      'image': image,
-    };
-  }
 }
