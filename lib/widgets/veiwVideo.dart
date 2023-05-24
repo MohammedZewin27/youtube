@@ -1,5 +1,3 @@
-
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -8,10 +6,12 @@ import 'package:video_player/video_player.dart';
 import '../provider/providerDatabase.dart';
 
 class ViewVideo extends StatefulWidget {
-final String pathVideo;
-final MyVideo video;
-final int index;
-  ViewVideo({required this.pathVideo,required this.video, required this.index});
+  final String pathVideo;
+  final MyVideo video;
+  final int index;
+
+  ViewVideo(
+      {required this.pathVideo, required this.video, required this.index});
 
   @override
   State<ViewVideo> createState() => _ViewVideoState();
@@ -25,12 +25,12 @@ class _ViewVideoState extends State<ViewVideo> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    controllerVideoDownload = VideoPlayerController.file(
-        File(widget.pathVideo))
+    controllerVideoDownload = VideoPlayerController.file(File(widget.pathVideo))
       ..initialize().then((value) {
         setState(() {});
       });
   }
+
   @override
   void dispose() {
     controllerVideoDownload.dispose();
@@ -52,13 +52,13 @@ class _ViewVideoState extends State<ViewVideo> {
                   playOrPause = !playOrPause;
                 });
               },
+              onLongPress: () {},
               child: Center(
                 child: controllerVideoDownload.value.isInitialized
                     ? AspectRatio(
-                  aspectRatio:
-                 controllerVideoDownload.value.aspectRatio,
-                  child: VideoPlayer(controllerVideoDownload),
-                )
+                        aspectRatio: controllerVideoDownload.value.aspectRatio,
+                        child: VideoPlayer(controllerVideoDownload),
+                      )
                     : Container(),
               ),
             ),
@@ -76,12 +76,35 @@ class _ViewVideoState extends State<ViewVideo> {
                   });
                 },
                 child: sound
-                    ? const Icon(Icons.volume_off_rounded, color: Colors.grey)
-                    : const Icon(Icons.volume_up, color: Colors.grey),
+                    ? const Icon(
+                        Icons.volume_off_rounded,
+                      )
+                    : const Icon(
+                        Icons.volume_up,
+                      ),
               ),
             ),
+            Positioned(
+                bottom: 10,
+                left: 8,
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  // color: Colors.black,
+                  child: Text(
+                    widget.video.duration,
+                    style: TextStyle(),
+                  ),
+                ))
           ],
         ),
+        Container(
+          width: double.infinity,
+            child: Text(
+          controllerVideoDownload.value.position.toString().substring(2, 7),
+          textAlign: TextAlign.right,
+        )),
+        VideoProgressIndicator(controllerVideoDownload,
+            allowScrubbing: true, ),
         Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
           CircleAvatar(
             foregroundImage: NetworkImage(widget.video.image),
@@ -95,13 +118,13 @@ class _ViewVideoState extends State<ViewVideo> {
               children: [
                 Flexible(
                     child: Text(
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      '   ${widget.video.title}  | '
-                          ' ${widget.video.duration} |  '
-                          ' ${widget.video.publishDate.substring(0, 11)}',
-                      style: const TextStyle(fontSize: 15),
-                    )),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  '   ${widget.video.title}  | '
+                  ' ${widget.video.duration} |  '
+                  ' ${widget.video.publishDate.substring(0, 11)}',
+                  style: const TextStyle(fontSize: 15),
+                )),
               ],
             ),
           ),

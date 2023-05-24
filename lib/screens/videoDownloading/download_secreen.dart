@@ -21,7 +21,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
   String videoPublishDate = '';
   String videoId = '';
   bool downloading = false;
-  bool insert = false;
+
   double progress = 0.0;
   var pathFileInMyPhone;
 
@@ -55,13 +55,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
             TextButton.icon(
               onPressed: () async {
                 await downloadVideo(urlTextEditingController.text)
-                    .then((value) {
-                  setState(() {
-                    insert
-                        ? ''
-                        : insertVideoInDatabase(urlTextEditingController.text);
-                  });
-                });
+                    .then((value) {});
               },
               label: videoId != '' && videoId.length > 10
                   ? const Text('download')
@@ -135,11 +129,13 @@ class _DownloadScreenState extends State<DownloadScreen> {
         var filePath = File('$appDocPath/${videoDownload.id}');
         //delete filePath if exists
         if (filePath.existsSync()) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(const SnackBar(content: Text('  video exist!',style: TextStyle(color: Colors.red),)));
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text(
+            '  video exist!',
+            style: TextStyle(color: Colors.red),
+          )));
           setState(() {
             downloading = false;
-            insert = true;
           });
           return;
           // filePath.deleteSync();
@@ -157,16 +153,20 @@ class _DownloadScreenState extends State<DownloadScreen> {
               '${videoDownload.title} Downloaded to $appDocPath/${videoDownload.id}';
 
           for (val; val == 1.0; val++) {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text(msg,style: const TextStyle(color: Colors.green))));
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content:
+                    Text(msg, style: const TextStyle(color: Colors.green))));
           }
           setState(() => progress = val);
 
           output.add(data);
         }
+        /// add to database
+        await insertVideoInDatabase(urlTextEditingController.text);
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('add youtube video url first!',style: TextStyle(color: Colors.red))));
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('add youtube video url first!',
+                style: TextStyle(color: Colors.red))));
         setState(() => downloading = false);
       }
     } else {
