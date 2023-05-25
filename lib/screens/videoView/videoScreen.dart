@@ -107,7 +107,7 @@ class _VideoScreenState extends State<VideoScreen> {
               Text(idController.text = ProviderData
                   .allVideos[VideoProvider.selectVideo]['videoTitle']),
               MaterialButton(
-                  child: Icon(Icons.volume_mute),
+                  child: Icon(Icons.minimize),
                   onPressed: () {
                     PIPView.of(context)?.presentBelow(MainPage());
                     setState(() {});

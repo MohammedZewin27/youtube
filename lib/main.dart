@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:youtube/provider/provider.dart';
 import 'package:youtube/provider/providerDatabase.dart';
 import 'package:youtube/screens/homeScreen/mainPage.dart';
+import 'package:youtube/screens/openYouTubeScreen.dart';
 
 
 import 'package:youtube/screens/videoView/videoScreen.dart';
@@ -43,6 +44,7 @@ class MyApp extends StatelessWidget {
       routes: {
         MainPage.routeName: (context) => const MainPage(),
         VideoScreen.routeName: (context) => const VideoScreen(),
+        OpenYouTube.routeName: (context) => const OpenYouTube(),
       },
       theme: ThemeData(
         brightness: Brightness.dark,
@@ -51,8 +53,8 @@ class MyApp extends StatelessWidget {
         ),
         appBarTheme: const AppBarTheme(
             systemOverlayStyle:  SystemUiOverlayStyle(
-              // systemNavigationBarColor: Colors.black,
-              statusBarColor: Colors.black,
+              systemNavigationBarColor: Colors.black26,
+              statusBarColor: Colors.black26,
             ),
             ),
       ),

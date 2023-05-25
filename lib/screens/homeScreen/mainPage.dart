@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:youtube/screens/homeScreen/home_page.dart';
 import 'package:youtube/screens/videoDownloading/download_secreen.dart';
-
 import '../videoDownloading/videoDownLoadingScreen.dart';
-
-
-
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -49,8 +45,6 @@ class _MainPageState extends State<MainPage> {
                   icon: Icon(Icons.video_call_outlined),
                   label: 'video',
                   activeIcon: Icon(Icons.video_call_rounded)),
-
-
             ]),
         body: Stack(
           children: screens

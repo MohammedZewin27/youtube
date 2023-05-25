@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:youtube/generated/assets.dart';
+import 'package:youtube/screens/openYouTubeScreen.dart';
 
 import '../res.dart';
 
@@ -14,7 +16,11 @@ class CustomSliverAppBar extends StatelessWidget {
       leadingWidth: 100,
       leading: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Image.asset(Res.logo),
+        child: InkWell(
+            onTap: (){
+              Navigator.pushNamed(context, OpenYouTube.routeName);
+            },
+            child: Image.asset(Assets.imageLogo)),
       ),
       actions: [
         IconButton(onPressed: () {}, icon: const Icon(Icons.cast)),
@@ -27,7 +33,7 @@ class CustomSliverAppBar extends StatelessWidget {
             iconSize: 40,
             icon: const CircleAvatar(
               foregroundImage: NetworkImage(
-                  'https://imgv3.fotor.com/images/blog-richtext-image/part-blurry-image.jpg'),
+                  'https://avatars.githubusercontent.com/u/133890793?s=400&u=812fefa522ca129ce43ddab61dfdd9e20db4a407&v=4'),
             )),
       ],
     );

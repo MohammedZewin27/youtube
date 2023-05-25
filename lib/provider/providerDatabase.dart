@@ -5,7 +5,7 @@ class ProviderData extends ChangeNotifier {
   static List<Map<String, dynamic>> allVideos = [];
   static List<MyVideo> videos = [];
   Database? database;
-  static const String tableName = 'youtubeVideoNew';
+  static const String tableName = 'youtubeVideo1';
 
   createDatabase() {
     openDatabase(
