@@ -7,6 +7,8 @@ import 'package:provider/provider.dart';
 import 'package:youtube/provider/providerDatabase.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
+import '../../models/data.dart';
+
 class DownloadScreen extends StatefulWidget {
   const DownloadScreen({Key? key}) : super(key: key);
 

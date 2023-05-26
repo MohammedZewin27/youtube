@@ -52,6 +52,10 @@ dependencies:
   video_player: ^2.6.1
   webview_flutter: ^4.2.1
   flutter_launcher_icons: ^0.13.1
+  flutter_riverpod: ^2.3.6
+
+
+
 
 dev_dependencies:
   flutter_test:

@@ -1,5 +1,9 @@
+
 import 'package:flutter/material.dart';
+
+import 'package:miniplayer/miniplayer.dart';
 import 'package:pip_view/pip_view.dart';
+import 'package:provider/provider.dart';
 import 'package:youtube/screens/homeScreen/home_page.dart';
 import 'package:youtube/models/data.dart';
 import 'package:youtube/provider/provider.dart';
@@ -7,7 +11,6 @@ import 'package:youtube/provider/providerDatabase.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../homeScreen/mainPage.dart';
-
 
 class VideoScreen extends StatefulWidget {
   const VideoScreen({Key? key}) : super(key: key);
@@ -19,16 +22,11 @@ class VideoScreen extends StatefulWidget {
 
 class _VideoScreenState extends State<VideoScreen> {
   late YoutubePlayerController controller;
-  late final bool mute;
-  late YoutubePlayerController _controller;
+  bool mute =false;
   late TextEditingController idController;
-  late TextEditingController _seekToController;
+  bool isFull = false;
 
-  late PlayerState _playerState;
-  late YoutubeMetaData _videoMetaData;
-  double _volume = 100;
-  bool _muted = false;
-  bool _isPlayerReady = false;
+
 
   @override
   void initState() {
@@ -37,9 +35,7 @@ class _VideoScreenState extends State<VideoScreen> {
     controller = YoutubePlayerController(
       initialVideoId: ProviderData.allVideos[VideoProvider.selectVideo]
           ['videoId'],
-
       flags: const YoutubePlayerFlags(
-
         mute: false,
         autoPlay: true,
         disableDragSeek: false,
@@ -47,74 +43,62 @@ class _VideoScreenState extends State<VideoScreen> {
         isLive: false,
         forceHD: false,
         enableCaption: true,
+        hideControls: false,
       ),
-    )..addListener(listener);
-    idController = TextEditingController();
-    _seekToController = TextEditingController();
-    _videoMetaData = const YoutubeMetaData();
-  }
+    );
 
-  void listener() {
-    if (_isPlayerReady && mounted && !_controller.value.isFullScreen) {
-      setState(() {
-        _playerState = _controller.value.playerState;
-        _videoMetaData = _controller.metadata;
-      });
-    }
-  }
 
-  // @override
-  // void deactivate() {
-  //   // Pauses video while navigating to next page.
-  //   controller.pause();
-  //   super.deactivate();
-  // }
+  }
 
   @override
-  void dispose() {
+  void dispose() async{
     // TODO: implement dispose
     super.dispose();
-    controller.dispose();
+
+
   }
+
+
+  final ValueNotifier<double> playerExpandProgress = ValueNotifier(70);
 
   @override
   Widget build(BuildContext context) {
-    return PIPView(
-      builder: (context, isFloating) => Center(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                color: Colors.black,
-                child: Center(
-                  child: YoutubePlayerBuilder(
-                    player: YoutubePlayer(controller: controller),
-                    onEnterFullScreen: () {
-                      PIPView.of(context)?.presentBelow(MainPage());
-                    },
-                    onExitFullScreen: () {
-
-                    },
-                    builder: (context, player) {
-                      return YoutubePlayer(controller: controller);
-                    },
-                  ),
+    var provider = Provider.of<VideoProvider>(context);
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child:
+          // Column(
+          //   mainAxisAlignment: MainAxisAlignment.center,
+          //   // mainAxisSize: MainAxisSize.min,
+          //   children: [
+          Row(
+        children: [
+          Expanded(
+            child: Container(
+              height: 250,
+              width: 300,
+              color: Colors.white,
+              child: YoutubePlayerBuilder(
+                player: YoutubePlayer(controller: controller,
+                onEnded: (metaData) {
+                  controller.dispose();
+                },
                 ),
+                builder: (context, player) {
+                  return Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      IconButton(
+                          onPressed: () {}, icon: Icon(Icons.play_arrow)),
+                      Expanded(child: Container()),
+                      player,
+                    ],
+                  );
+                },
               ),
-              Text(idController.text = ProviderData
-                  .allVideos[VideoProvider.selectVideo]['videoTitle']),
-              MaterialButton(
-                  child: Icon(Icons.minimize),
-                  onPressed: () {
-                    PIPView.of(context)?.presentBelow(MainPage());
-                    setState(() {});
-                  }),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -123,4 +107,6 @@ class _VideoScreenState extends State<VideoScreen> {
   String convertedUrlYoutube(url) {
     return YoutubePlayer.convertUrlToId(url).toString();
   }
+
+
 }

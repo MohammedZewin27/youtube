@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
+import '../models/data.dart';
+
 class ProviderData extends ChangeNotifier {
   static List<Map<String, dynamic>> allVideos = [];
   static List<MyVideo> videos = [];
@@ -97,24 +99,6 @@ class ProviderData extends ChangeNotifier {
   }
 }
 
-class MyVideo {
-  final String videoId;
-  final String title;
-  final String thumbnailUrl;
-  final String duration;
-  final String publishDate;
-  final String image;
-  final String filePath;
-
-  MyVideo({
-    required this.videoId,
-    required this.title,
-    required this.thumbnailUrl,
-    required this.duration,
-    required this.publishDate,
-    required this.image,
-     this.filePath='',
-  });
 
 
-}
+

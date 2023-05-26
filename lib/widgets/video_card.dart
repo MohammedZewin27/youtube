@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:pip_view/pip_view.dart';
+
 import 'package:provider/provider.dart';
 
 
@@ -11,6 +11,8 @@ import 'package:timeago/timeago.dart' as timeago;
 import 'package:youtube/provider/provider.dart';
 import 'package:youtube/provider/providerDatabase.dart';
 import 'package:youtube/screens/videoView/videoScreen.dart';
+
+import '../models/data.dart';
 
 class VideoCard extends StatelessWidget {
   final MyVideo video;
@@ -48,9 +50,9 @@ class VideoCard extends StatelessWidget {
               // context.read(selectedVideoProvider).state=video;
               arg.changeSelect(index);
               print(video.title);
-
               print(index);
-              Navigator.pushNamed(context, VideoScreen.routeName);
+              arg.miniPlayer();
+              // Navigator.pushNamed(context, VideoScreen.routeName);
             },
             child: Column(
               children: [

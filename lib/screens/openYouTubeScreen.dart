@@ -69,7 +69,7 @@ class _OpenYouTubeState extends State<OpenYouTube> {
     // _loadHtmlFromAssets();
     return Scaffold(
       appBar: AppBar(
-        title: Text('Webview Demo'),
+        title: Text('zewin youtube'),
       ),
       body: WebViewWidget(
         controller: controller,
